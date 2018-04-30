@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">LKI Reporting</string>
+
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
+
+    <string name="tanggal">Tanggal</string>
+    <string name="kegiatan">Kegiatan</string>
+    <string name="output">Output</string>
+    <string name="volume">Volume</string>
+    <string name="satuan">Satuan</string>
+    <string name="keterangan">Keterangan</string>
+
+    <string name="edit">Ubah</string>
+    <string name="hapus">Hapus</string>
+    <string name="batal">Batal</string>
+    <string name="simpan">Simpan</string>
+
+    <string name="err_tanggal">Masukan Tanggal</string>
+    <string name="err_kegiatan">Masukan Kegiatan</string>
+    <string name="err_volume">Masukan Volume</string>
+    <string name="err_satuan">Masukan Satuan</string>
+    <string name="err_output">Masukan Output</string>
+    <string name="err_keterangan">Masukan Keterangan</string>
+
+    <string name="emptyData">Belum Ada Data</string>
+
+    <string name="inden">:</string>
+    <string name="export">Export</string>
+    <string name="rating">Rating</string>
+    <string name="about">About</string>
+    <string name="tips">Tips</string>
+    <string name="cari">Cari</string>
+
+</resources>

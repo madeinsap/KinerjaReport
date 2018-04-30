@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/export"
+        android:title="@string/export"
+        android:icon="@drawable/export"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/rating"
+        android:title="@string/rating"/>
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/about"/>
+
+    <item
+        android:id="@+id/tips"
+        android:title="@string/tips"/>
+
+</menu>

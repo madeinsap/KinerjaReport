@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1047772650079",
+    "firebase_url": "https://lki-reporting.firebaseio.com",
+    "project_id": "lki-reporting",
+    "storage_bucket": "lki-reporting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047772650079:android:03087c00c4c2dfda",
+        "android_client_info": {
+          "package_name": "com.project.solomode.kinerjareport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047772650079-dncvc9p22ph03tb7r8gig12v8aosj16b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.solomode.kinerjareport",
+            "certificate_hash": "158f1f660637535743686be9437b30328ad20c5e"
+          }
+        },
+        {
+          "client_id": "1047772650079-h248dkj3j15sjl7ttt8ia4imq3bm658d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvx2Yj2o-fybo8att0Y9rHO2cERfWdh20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047772650079-h248dkj3j15sjl7ttt8ia4imq3bm658d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
