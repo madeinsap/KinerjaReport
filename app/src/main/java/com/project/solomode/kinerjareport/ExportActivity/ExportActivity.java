@@ -1,12 +1,8 @@
 package com.project.solomode.kinerjareport.ExportActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,32 +16,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.project.solomode.kinerjareport.DatabaseSetup.Adapter.ExportAdapter;
 import com.project.solomode.kinerjareport.DatabaseSetup.Models.Data;
 import com.project.solomode.kinerjareport.DatabaseSetup.Utils.DataDBHelper;
-import com.project.solomode.kinerjareport.HomeActivity.MainActivity;
 import com.project.solomode.kinerjareport.R;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 public class ExportActivity extends AppCompatActivity {
@@ -295,7 +283,7 @@ public class ExportActivity extends AppCompatActivity {
             public void onCompleted(String filePath) {
                 Button open, ok;
                 LayoutInflater factory = LayoutInflater.from(ExportActivity.this);
-                final View aboutView = factory.inflate(R.layout.openfolder_window, null);
+                final View aboutView = factory.inflate(R.layout.window_openfolder, null);
                 final AlertDialog successDialog = new AlertDialog.Builder(ExportActivity.this).create();
                 successDialog.setView(aboutView);
                 successDialog.setCancelable(false);

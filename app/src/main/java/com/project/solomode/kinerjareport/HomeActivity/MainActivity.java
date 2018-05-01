@@ -1,15 +1,12 @@
 package com.project.solomode.kinerjareport.HomeActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -18,23 +15,18 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -152,6 +143,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateWindow(){
         LayoutInflater factory = LayoutInflater.from(this);
-        final View updateView = factory.inflate(R.layout.outofdate_window, null);
+        final View updateView = factory.inflate(R.layout.window_outofdate, null);
         final AlertDialog updateDialog = new AlertDialog.Builder(this).create();
         updateDialog.setView(updateView);
         updateDialog.setCancelable(false);
@@ -206,16 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("No Connection");
-                builder.setPositiveButton("Refresh", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getVersion();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+
             }
         });
     }
@@ -303,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Button ok;
                 String version_name = BuildConfig.VERSION_NAME;
                 LayoutInflater factory = LayoutInflater.from(this);
-                final View aboutView = factory.inflate(R.layout.about_window, null);
+                final View aboutView = factory.inflate(R.layout.window_about, null);
                 final AlertDialog aboutDialog = new AlertDialog.Builder(this).create();
                 version = (TextView) aboutView.findViewById(R.id.subtitle);
                 version.setText("V" + version_name);
@@ -368,5 +362,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
         sequence.start();
+    }
+
+    @Override
+    public void onBackPressed(){
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View exitView = factory.inflate(R.layout.window_exit, null);
+        final AlertDialog exitDialog = new AlertDialog.Builder(this).create();
+        exitDialog.setView(exitView);
+        exitDialog.setCancelable(false);
+        exitDialog.show();
+
+        Button batal = exitView.findViewById(R.id.batal);
+        batal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+            }
+        });
+
+        Button ya = exitView.findViewById(R.id.ya);
+        ya.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.finish();
+                System.exit(0);
+            }
+        });
     }
 }
