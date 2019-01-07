@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".DatabaseSetup.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,25 +23,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".HomeActivity.MainActivity"></activity>
-
+        <activity android:name=".HomeActivity.MainActivity" />
         <activity
             android:name=".InsertActivity.InsertActivity"
             android:windowSoftInputMode="stateAlwaysHidden|stateVisible|adjustResize"
-            tools:ignore="InnerclassSeparator"></activity>
-
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".UpdateActivity.UpdateActivity"
             android:windowSoftInputMode="stateAlwaysHidden|stateVisible|adjustResize"
-            tools:ignore="InnerclassSeparator"></activity>
-
-        <activity android:name=".ExportActivity.ExportActivity"></activity>
+            tools:ignore="InnerclassSeparator" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".ExportActivity.ExportActivity"></activity>
     </application>
 
 </manifest>

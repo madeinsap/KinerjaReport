@@ -65,33 +65,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@id/layout_tanggal"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:background="@drawable/oval_edit">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/tanggal"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:errorTextAppearance="@style/error_appearance">
 
                     <EditText
                         android:id="@+id/input_tanggal"
@@ -113,45 +106,24 @@
                         tools:ignore="Deprecated,KeyboardInaccessibleWidget" />
                 </android.support.design.widget.TextInputLayout>
 
-            </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_kegiatan"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_tanggal">
-
-                <ImageView
-                    android:id="@+id/clear_kegiatan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="20dp"
-                    android:padding="2dp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_clear"
-                    tools:ignore="ContentDescription" />
+                android:background="@drawable/oval_edit">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/kegiatan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/clear_kegiatan"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:errorTextAppearance="@style/error_appearance">
 
                     <EditText
                         android:id="@+id/input_kegiatan"
@@ -165,95 +137,36 @@
                         android:padding="2dp"
                         android:singleLine="false"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
-            </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_output"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/check_output"
-                app:layout_constraintTop_toBottomOf="@+id/layout_satuan">
+                </android.support.design.widget.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/clear_output"
+                    android:id="@+id/clear_kegiatan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginTop="20dp"
-                    android:padding="2dp"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/output"
-                    app:srcCompat="@drawable/ic_clear"
-                    tools:ignore="ContentDescription" />
+                    app:srcCompat="@drawable/ic_clear"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/output"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/clear_output"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+            </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/input_output"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:fontFamily="@font/varela_round"
-                        android:hint="@string/output"
-                        android:inputType="textMultiLine"
-                        android:padding="2dp"
-                        android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_volume"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_kegiatan">
-
-                <ImageView
-                    android:id="@+id/clear_volume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:padding="2dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/ic_clear"
-                    tools:ignore="ContentDescription" />
+                android:background="@drawable/oval_edit">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/clear_volume"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:errorTextAppearance="@style/error_appearance">
 
                     <EditText
                         android:id="@+id/input_volume"
@@ -266,45 +179,36 @@
                         android:padding="2dp"
                         android:singleLine="true"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
-            </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_satuan"
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/clear_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_clear"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_volume">
-
-                <ImageView
-                    android:id="@+id/clear_satuan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:padding="2dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/ic_clear"
-                    tools:ignore="ContentDescription" />
+                android:background="@drawable/oval_edit">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/satuan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/clear_satuan"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:errorTextAppearance="@style/error_appearance">
 
                     <EditText
                         android:id="@+id/input_satuan"
@@ -313,85 +217,137 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/varela_round"
                         android:hint="@string/satuan"
-                        android:inputType="textCapSentences"
+                        android:inputType="text"
                         android:padding="2dp"
-                        android:selectAllOnFocus="false"
+                        android:singleLine="true"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
-            </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_keterangan"
-                android:layout_width="0dp"
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/clear_satuan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_clear"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp">
+
+                <CheckBox
+                    android:id="@+id/check_output"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/oval_edit">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/output"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        app:errorTextAppearance="@style/error_appearance">
+
+                        <EditText
+                            android:id="@+id/input_output"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/varela_round"
+                            android:hint="@string/output"
+                            android:inputType="text"
+                            android:padding="2dp"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/clear_output"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_clear"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/oval_edit"
-                android:elevation="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/check_keterangan"
-                app:layout_constraintTop_toBottomOf="@+id/layout_output"
-                app:layout_constraintVertical_bias="0.0">
+                android:layout_marginTop="8dp">
 
-                <ImageView
-                    android:id="@+id/clear_keterangan"
+                <CheckBox
+                    android:id="@+id/check_keterangan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:padding="2dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/ic_clear"
-                    tools:ignore="ContentDescription" />
+                    android:layout_gravity="center_vertical"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/keterangan"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:padding="8dp"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/clear_keterangan"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:orientation="horizontal"
+                    android:background="@drawable/oval_edit">
 
-                    <EditText
-                        android:id="@+id/input_keterangan"
-                        android:layout_width="match_parent"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/keterangan"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:fontFamily="@font/varela_round"
-                        android:hint="@string/keterangan"
-                        android:inputType="textMultiLine"
-                        android:padding="2dp"
-                        android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
-            </android.support.constraint.ConstraintLayout>
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        app:errorTextAppearance="@style/error_appearance">
 
-            <CheckBox
-                android:id="@+id/check_output"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_satuan" />
+                        <EditText
+                            android:id="@+id/input_keterangan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/varela_round"
+                            android:hint="@string/keterangan"
+                            android:inputType="text"
+                            android:padding="2dp"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
 
-            <CheckBox
-                android:id="@+id/check_keterangan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_output" />
+                    </android.support.design.widget.TextInputLayout>
 
-        </android.support.constraint.ConstraintLayout>
+                    <ImageView
+                        android:id="@+id/clear_keterangan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_clear"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>

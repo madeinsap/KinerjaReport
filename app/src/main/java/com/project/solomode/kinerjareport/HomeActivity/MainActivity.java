@@ -1,9 +1,9 @@
 package com.project.solomode.kinerjareport.HomeActivity;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -33,13 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.solomode.kinerjareport.BuildConfig;
+import com.project.solomode.kinerjareport.DatabaseSetup.Kegiatan;
 import com.project.solomode.kinerjareport.ExportActivity.ExportActivity;
-import com.project.solomode.kinerjareport.DatabaseSetup.Adapter.DataAdapter;
-import com.project.solomode.kinerjareport.DatabaseSetup.Models.Data;
-import com.project.solomode.kinerjareport.DatabaseSetup.Utils.DataDBHelper;
 import com.project.solomode.kinerjareport.InsertActivity.InsertActivity;
-import com.project.solomode.kinerjareport.UpdateActivity.UpdateActivity;
 import com.project.solomode.kinerjareport.R;
+import com.project.solomode.kinerjareport.UpdateActivity.UpdateActivity;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.text.SimpleDateFormat;
@@ -47,101 +44,59 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.project.solomode.kinerjareport.DatabaseSetup.MyApplication.db;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private FloatingActionButton fab;
+    FloatingActionButton fab;
 
-    private DataAdapter mAdapter;
-    private List<Data> dataList = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ShimmerFrameLayout mShimmerViewContainer;
-    private ImageView noData;
+    DataAdapter mAdapter;
+    List<Kegiatan> listKegiatan = new ArrayList<>();;
+    RecyclerView recyclerView;
+
+    SwipeRefreshLayout swipeRefreshLayout;
+    ShimmerFrameLayout mShimmerViewContainer;
+    ImageView noData;
     Toolbar toolbar;
 
-    private Setup setup;
-
-    private DataDBHelper db;
+    SetupFirstLoad setupFirstLoad;
 
     CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mDatabaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar =  findViewById(R.id.toolbar);
         toolbar.setOverflowIcon(getDrawable(R.drawable.option));
         setSupportActionBar(toolbar);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("Laporan Kinerja");
 
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle("Laporan Kinerja");
         collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.whiteColor));
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.whiteColor));
-        fab = (FloatingActionButton)findViewById(R.id.fab);
+
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
         recyclerView = findViewById(R.id.recyclerHome);
         noData = findViewById(R.id.img_nodata);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swiper);
+        swipeRefreshLayout = findViewById(R.id.swiper);
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
 
-        db = new DataDBHelper(this);
-        refreshData();
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("EEE, d MMM yyyy");
-        String strDate = dateformat.format(calendar.getTime());
-        TextView date = (TextView) findViewById(R.id.tanggal);
-        date.setText(strDate);
-
-        setup = new Setup(this);
-        if (setup.isFirstTimeLaunch()) {
+        setupFirstLoad = new SetupFirstLoad(this);
+        if (setupFirstLoad.isFirstTimeLaunch()) {
             setupFirstTime();
         }
 
-        mAdapter = new DataAdapter(this, dataList, new DataAdapter.MyAdapterListener() {
-            @Override
-            public void editOnClick(View v, final int position) {
-                Intent update = new Intent(getApplicationContext(), UpdateActivity.class);
-                update.putExtra("id", dataList.get(position).getId());
-                startActivity(update);
-                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
-            }
-
-            @Override
-            public void hapusOnClick(View v, final int position) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setMessage("Hapus Kegiatan?");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Hapus",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteData(position);
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Batal",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-
-                Button possitive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                Button negative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                possitive.setTextColor(Color.parseColor("#f44336"));
-                negative.setTextColor(Color.parseColor("#f44336"));
-            }
-        });
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(mAdapter);
+        checkVersionApp();
+        getData();
+        initRecycler();
+        getCalendar();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -159,51 +114,119 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                refreshData();
+                getData();
             }
         });
 
+    }
+
+    private void getCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateformat = new
+                SimpleDateFormat("EEE, d MMM yyyy");
+        String strDate = dateformat.format(calendar.getTime());
+        TextView date = findViewById(R.id.tanggal);
+        date.setText(strDate);
+    }
+
+    private void getData() {
+        listKegiatan.clear();
+        noData.setVisibility(View.GONE);
+        mShimmerViewContainer.startShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.VISIBLE);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.GONE);
+                listKegiatan = db.kegiatanDao().getAll();
+                mAdapter = new DataAdapter(getApplicationContext(), listKegiatan, new DataAdapter.MyAdapterListener() {
+                    @Override
+                    public void editOnClick(View v, int position) {
+                        Intent update = new Intent(getApplicationContext(), UpdateActivity.class);
+                        update.putExtra("id", listKegiatan.get(position).getId());
+                        startActivity(update);
+                        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+                    }
+
+                    @Override
+                    public void hapusOnClick(View v, final int position) {
+                        LayoutInflater factory = LayoutInflater.from(MainActivity.this);
+                        final View deleteConfirmation = factory.inflate(R.layout.window_delete_confirmation, null);
+                        final AlertDialog deleteConfirmationDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        deleteConfirmationDialog.setView(deleteConfirmation);
+                        deleteConfirmationDialog.show();
+
+                        Button batal = deleteConfirmation.findViewById(R.id.batal);
+                        batal.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteConfirmationDialog.dismiss();
+                            }
+                        });
+
+                        Button ya = deleteConfirmation.findViewById(R.id.ya);
+                        ya.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Integer deleted = db.kegiatanDao().deleteKegiatan(listKegiatan.
+                                        get(position).getId());
+
+                                if(deleted==1) {
+                                    deleteConfirmationDialog.dismiss();
+                                    FancyToast.makeText(MainActivity.this,
+                                            "Data berhasil dihapus", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                                    getData();
+                                }
+                            }
+                        });
+                    }
+                });
+                recyclerView.setAdapter(mAdapter);
+                toggleEmptyData();
+            }
+        }, 1000);
+    }
+
+    private void initRecycler() {
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    private void setupFirstTime() {
+        setupFirstLoad.setFirstTimeLaunch(false);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setupTap();
+            }
+        }, 1000);
+    }
+
+    private void toggleEmptyData() {
+        if (listKegiatan.size() == 0) {
+            noData.setVisibility(View.VISIBLE);
+        } else {
+            noData.setVisibility(View.GONE);
+        }
+    }
+
+    private void checkVersionApp() {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference();
 
-        getVersion();
-    }
-
-    private void updateWindow(){
-        LayoutInflater factory = LayoutInflater.from(this);
-        final View updateView = factory.inflate(R.layout.window_outofdate, null);
-        final AlertDialog updateDialog = new AlertDialog.Builder(this).create();
-        updateDialog.setView(updateView);
-        updateDialog.setCancelable(false);
-        updateDialog.show();
-
-        Button ok = (Button) updateView.findViewById(R.id.close);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateDialog.dismiss();
-            }
-        });
-
-        Button update = (Button) updateView.findViewById(R.id.update);
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+"com.project.solomode.kinerjareport"));
-                startActivity(mIntent);
-            }
-        });
-    }
-
-    private void getVersion(){
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot data) {
                 Double getVersion = data.child("version").getValue(Double.class);
                 String currentVersion = String.valueOf(getVersion);
                 String nameVersion = BuildConfig.VERSION_NAME;
-                if(!currentVersion.equals(nameVersion)){
-                    updateWindow();
+                if (!currentVersion.equals(nameVersion)) {
+                    openUpdateWindow();
                 }
             }
 
@@ -214,48 +237,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void refreshData(){
-        dataList.clear();
-        mShimmerViewContainer.startShimmerAnimation();
-        mShimmerViewContainer.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+    private void openUpdateWindow() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View updateView = factory.inflate(R.layout.window_outofdate, null);
+        final AlertDialog updateDialog = new AlertDialog.Builder(this).create();
+        updateDialog.setView(updateView);
+        updateDialog.setCancelable(false);
+        updateDialog.show();
+
+        Button ok = updateView.findViewById(R.id.close);
+        ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                mShimmerViewContainer.stopShimmerAnimation();
-                mShimmerViewContainer.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                dataList.addAll(db.getAllData());
-                mAdapter.notifyDataSetChanged();
-                toggleEmptyData();
+            public void onClick(View v) {
+                updateDialog.dismiss();
             }
-        }, 1000);
-    }
+        });
 
-    private void setupFirstTime(){
-        setup.setFirstTimeLaunch(false);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        Button update = updateView.findViewById(R.id.update);
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                setupTap();
+            public void onClick(View v) {
+                Intent mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.project.solomode.kinerjareport"));
+                startActivity(mIntent);
             }
-        }, 1000);
-    }
-
-    private void deleteData(int position) {
-        db.deleteData(dataList.get(position));
-
-        dataList.remove(position);
-        mAdapter.notifyItemRemoved(position);
-
-        toggleEmptyData();
+        });
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.fab:
                 Intent insert = new Intent(this, InsertActivity.class);
                 startActivity(insert);
@@ -264,16 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void toggleEmptyData() {
-        if (db.getDataCount() > 0) {
-            noData.setVisibility(View.GONE);
-        } else {
-            noData.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.main_menu, menu);
@@ -284,34 +287,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.export:
-                Intent export = new Intent(getApplicationContext(), ExportActivity.class);
-                startActivity(export);
+                Intent intent = new Intent(this, ExportActivity.class);
+                startActivity(intent);
                 overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                 return true;
             case R.id.rating:
-                Intent mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+"com.project.solomode.kinerjareport"));
+                Intent mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.project.solomode.kinerjareport"));
                 startActivity(mIntent);
                 return true;
             case R.id.about:
-                TextView version;
-                Button ok;
-                String version_name = BuildConfig.VERSION_NAME;
-                LayoutInflater factory = LayoutInflater.from(this);
-                final View aboutView = factory.inflate(R.layout.window_about, null);
-                final AlertDialog aboutDialog = new AlertDialog.Builder(this).create();
-                version = (TextView) aboutView.findViewById(R.id.subtitle);
-                version.setText("V" + version_name);
-                aboutDialog.setView(aboutView);
-                aboutDialog.setCancelable(false);
-                aboutDialog.show();
-
-                ok = (Button) aboutView.findViewById(R.id.ok);
-                ok.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        aboutDialog.dismiss();
-                    }
-                });
+                openAboutWindow();
                 return true;
             case R.id.tips:
                 setupTap();
@@ -321,18 +306,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void setupTap(){
+    private void openAboutWindow() {
+        String version_name = BuildConfig.VERSION_NAME;
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View aboutView = factory.inflate(R.layout.window_about, null);
+        final AlertDialog aboutDialog = new AlertDialog.Builder(this).create();
+
+        TextView version = aboutView.findViewById(R.id.subtitle);
+        version.setText("V" + version_name);
+        aboutDialog.setView(aboutView);
+        aboutDialog.show();
+
+        Button ok = aboutView.findViewById(R.id.ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aboutDialog.dismiss();
+            }
+        });
+    }
+
+    private void setupTap() {
         final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
                         //Tap FAB
-                        TapTarget.forView(findViewById(R.id.fab), "Tambah Data", "Pilih untuk menambah data kinerja")
+                        TapTarget.forView(findViewById(R.id.fab), "Tambah Kegiatan", "Pilih untuk menambah data kinerja")
                                 .dimColor(android.R.color.black)
                                 .tintTarget(false)
                                 .cancelable(false)
                                 .id(1),
 
                         //Tap Export
-                        TapTarget.forToolbarMenuItem(toolbar, R.id.export, "Export Data", "Pilih untuk export data menjadi file Excel")
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.export, "Export Kegiatan", "Pilih untuk export data menjadi file Excel")
                                 .dimColor(android.R.color.black)
                                 .cancelable(false)
                                 .id(2),
@@ -342,13 +347,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .dimColor(android.R.color.black)
                                 .cancelable(false)
                                 .id(3)
-                        )
+                )
                 .listener(new TapTargetSequence.Listener() {
                     // This listener will tell us when interesting(tm) events happen in regards
                     // to the sequence
                     @Override
                     public void onSequenceFinish() {
-                        FancyToast.makeText(MainActivity.this,"Enjoy", FancyToast.LENGTH_LONG, FancyToast.DEFAULT,false).show();
+
                     }
 
                     @Override
@@ -365,12 +370,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View exitView = factory.inflate(R.layout.window_exit, null);
         final AlertDialog exitDialog = new AlertDialog.Builder(this).create();
         exitDialog.setView(exitView);
-        exitDialog.setCancelable(false);
         exitDialog.show();
 
         Button batal = exitView.findViewById(R.id.batal);
@@ -389,5 +393,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.exit(0);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getData();
     }
 }

@@ -1,4 +1,4 @@
-package com.project.solomode.kinerjareport.DatabaseSetup.Adapter;
+package com.project.solomode.kinerjareport.ExportActivity;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.project.solomode.kinerjareport.DatabaseSetup.Models.Data;
+import com.project.solomode.kinerjareport.DatabaseSetup.Kegiatan;
 import com.project.solomode.kinerjareport.R;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ExportAdapter extends RecyclerView.Adapter<ExportAdapter.MyViewHolder>{
 
     private Context context;
-    private List<Data> dataList;
+    private List<Kegiatan> kegiatanList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView kegiatan;
@@ -34,9 +34,9 @@ public class ExportAdapter extends RecyclerView.Adapter<ExportAdapter.MyViewHold
         }
     }
 
-    public ExportAdapter(Context context, List<Data> dataList) {
+    public ExportAdapter(Context context, List<Kegiatan> kegiatanList) {
         this.context = context;
-        this.dataList = dataList;
+        this.kegiatanList = kegiatanList;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ExportAdapter extends RecyclerView.Adapter<ExportAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Data data = dataList.get(position);
+        Kegiatan data = kegiatanList.get(position);
 
         holder.kegiatan.setText(data.getKegiatan());
         holder.volume.setText(data.getVolume());
@@ -60,7 +60,7 @@ public class ExportAdapter extends RecyclerView.Adapter<ExportAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return kegiatanList.size();
     }
 
 }

@@ -3,7 +3,7 @@ package com.project.solomode.kinerjareport.HomeActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class Setup {
+public class SetupFirstLoad {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context context;
@@ -15,7 +15,7 @@ public class Setup {
     private static final String PREF_NAME = "LKI-welcome";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
-    public Setup(Context context) {
+    public SetupFirstLoad(Context context) {
         this.context = context;
         pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();

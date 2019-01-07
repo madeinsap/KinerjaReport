@@ -1,12 +1,10 @@
 package com.project.solomode.kinerjareport.UpdateActivity;
 
 import android.app.DatePickerDialog;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -19,16 +17,17 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.project.solomode.kinerjareport.DatabaseSetup.Utils.DataDBHelper;
-import com.project.solomode.kinerjareport.InsertActivity.InsertActivity;
+import com.project.solomode.kinerjareport.DatabaseSetup.Kegiatan;
 import com.project.solomode.kinerjareport.R;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static com.project.solomode.kinerjareport.DatabaseSetup.MyApplication.db;
 
 public class UpdateActivity extends AppCompatActivity {
 
@@ -39,9 +38,8 @@ public class UpdateActivity extends AppCompatActivity {
     private Button btnSimpan, btnKembali;
     private ImageView clearKegiatan, clearVolume, clearSatuan, clearOutput, clearKeterangan;
     private CheckBox checkOutput, checkKeterangan;
+    private Kegiatan curentKegiatan;
 
-    private DataDBHelper dbHelper;
-    protected Cursor cursor;
     Calendar myCalendar;
 
     @Override
@@ -51,7 +49,7 @@ public class UpdateActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Kinerja");
-        toolbar.setSubtitle("Memperbarui Data");
+        toolbar.setSubtitle("Memperbarui Kegiatan");
         Drawable backArrow = getResources().getDrawable(R.drawable.ic_arrow_back);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         setSupportActionBar(toolbar);
@@ -64,45 +62,50 @@ public class UpdateActivity extends AppCompatActivity {
             valueId = getIntent().getIntExtra("id", 0);
         }
 
-        dbHelper = new DataDBHelper(this);
+        inputLayoutTanggal = findViewById(R.id.tanggal);
+        inputLayoutKegiatan = findViewById(R.id.kegiatan);
+        inputLayoutVolume = findViewById(R.id.volume);
+        inputLayoutSatuan = findViewById(R.id.satuan);
+        inputLayoutOutput = findViewById(R.id.output);
+        inputLayoutKeterangan = findViewById(R.id.keterangan);
 
-        inputLayoutTanggal = (TextInputLayout) findViewById(R.id.tanggal);
-        inputLayoutKegiatan = (TextInputLayout) findViewById(R.id.kegiatan);
-        inputLayoutVolume = (TextInputLayout) findViewById(R.id.volume);
-        inputLayoutSatuan = (TextInputLayout) findViewById(R.id.satuan);
-        inputLayoutOutput = (TextInputLayout) findViewById(R.id.output);
-        inputLayoutKeterangan = (TextInputLayout) findViewById(R.id.keterangan);
+        inputTanggal = findViewById(R.id.input_tanggal);
+        inputKegiatan = findViewById(R.id.input_kegiatan);
+        inputVolume = findViewById(R.id.input_volume);
+        inputSatuan = findViewById(R.id.input_satuan);
+        inputOutput = findViewById(R.id.input_output);
+        inputKeterangan = findViewById(R.id.input_keterangan);
 
-        inputTanggal = (EditText) findViewById(R.id.input_tanggal);
-        inputKegiatan = (EditText) findViewById(R.id.input_kegiatan);
-        inputVolume = (EditText) findViewById(R.id.input_volume);
-        inputSatuan = (EditText) findViewById(R.id.input_satuan);
-        inputOutput = (EditText) findViewById(R.id.input_output);
-        inputKeterangan = (EditText) findViewById(R.id.input_keterangan);
+        btnSimpan = findViewById(R.id.btn_save);
+        btnKembali = findViewById(R.id.btn_cencel);
 
-        btnSimpan = (Button) findViewById(R.id.btn_save);
-        btnKembali = (Button) findViewById(R.id.btn_cencel);
-
-        clearKegiatan = (ImageView) findViewById(R.id.clear_kegiatan);
-        clearVolume = (ImageView) findViewById(R.id.clear_volume);
-        clearSatuan = (ImageView) findViewById(R.id.clear_satuan);
-        clearOutput = (ImageView) findViewById(R.id.clear_output);
-        clearKeterangan = (ImageView) findViewById(R.id.clear_keterangan);
+        clearKegiatan = findViewById(R.id.clear_kegiatan);
+        clearVolume = findViewById(R.id.clear_volume);
+        clearSatuan = findViewById(R.id.clear_satuan);
+        clearOutput = findViewById(R.id.clear_output);
+        clearKeterangan = findViewById(R.id.clear_keterangan);
 
         inputTanggal.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputTanggal));
         inputKegiatan.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputKegiatan));
         inputKegiatan.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        inputKegiatan.setRawInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        inputKegiatan.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
         inputVolume.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputVolume));
+        inputSatuan.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
         inputSatuan.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputSatuan));
+        inputSatuan.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        inputSatuan.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
         inputOutput.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputOutput));
         inputOutput.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        inputOutput.setRawInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        inputOutput.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
         inputKeterangan.addTextChangedListener(new UpdateActivity.MyTextWatcher(inputKeterangan));
         inputKeterangan.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        inputKeterangan.setRawInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        inputKeterangan.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-        checkOutput = (CheckBox) findViewById(R.id.check_output);
+        checkOutput = findViewById(R.id.check_output);
         checkOutput.setChecked(true);
         inputOutput.setEnabled(true);
         checkOutput.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,7 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (checkOutput.isChecked()) {
                     inputOutput.setEnabled(true);
-                } else if(!checkOutput.isChecked()) {
+                } else if (!checkOutput.isChecked()) {
                     checkOutput.setChecked(false);
                     inputOutput.setText("-");
                     inputOutput.setEnabled(false);
@@ -126,7 +129,7 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (checkKeterangan.isChecked()) {
                     inputKeterangan.setEnabled(true);
-                } else if(!checkKeterangan.isChecked()) {
+                } else if (!checkKeterangan.isChecked()) {
                     checkKeterangan.setChecked(false);
                     inputKeterangan.setText("-");
                     inputKeterangan.setEnabled(false);
@@ -134,23 +137,23 @@ public class UpdateActivity extends AppCompatActivity {
             }
         });
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM table_kinerja WHERE id = '" +
-                valueId + "'", null);
-        cursor.moveToFirst();
+        curentKegiatan = db.kegiatanDao().getKegiatan(valueId);
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToPosition(0);
-            inputTanggal.setText(cursor.getString(1).toString());
-            inputKegiatan.setText(cursor.getString(2).toString());
-            inputVolume.setText(cursor.getString(3).toString());
-            inputSatuan.setText(cursor.getString(4).toString());
-            inputOutput.setText(cursor.getString(5).toString());
-            inputKeterangan.setText(cursor.getString(6).toString());
-        }
+        inputTanggal.setText(curentKegiatan.getTanggal());
+        inputKegiatan.setText(curentKegiatan.getKegiatan());
+        inputVolume.setText(curentKegiatan.getVolume());
+        inputSatuan.setText(curentKegiatan.getSatuan());
+        inputOutput.setText(curentKegiatan.getOutput());
+        inputKeterangan.setText(curentKegiatan.getKeterangan());
 
         //Calendar support
         myCalendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        try {
+            myCalendar.setTime(simpleDateFormat.parse(curentKegiatan.getTanggal()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -262,12 +265,20 @@ public class UpdateActivity extends AppCompatActivity {
         updateData(valueId, inputTanggal.getText().toString(), inputKegiatan.getText().toString(),
                 inputVolume.getText().toString(), inputSatuan.getText().toString(), inputOutput.getText().toString(),
                 inputKeterangan.getText().toString());
-        FancyToast.makeText(UpdateActivity.this,"Berhasil, Pull down to refresh", FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+        FancyToast.makeText(UpdateActivity.this, "Data berhasil diubah", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
         super.onBackPressed();
     }
 
     private void updateData(int id, String tanggal, String kegiatan, String volume, String satuan, String output, String keterangan) {
-        dbHelper.updateData(id, tanggal, kegiatan, volume, satuan, output, keterangan);
+        curentKegiatan.setId(id);
+        curentKegiatan.setTanggal(tanggal);
+        curentKegiatan.setKegiatan(kegiatan);
+        curentKegiatan.setVolume(volume);
+        curentKegiatan.setSatuan(satuan);
+        curentKegiatan.setOutput(output);
+        curentKegiatan.setKeterangan(keterangan);
+
+        db.kegiatanDao().updateKegiatan(curentKegiatan);
         super.onBackPressed();
     }
 
@@ -364,6 +375,7 @@ public class UpdateActivity extends AppCompatActivity {
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
+
         private MyTextWatcher(View view) {
             this.view = view;
         }
@@ -401,7 +413,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
         this.finish();
 
