@@ -12,8 +12,8 @@ Kinerja report adalah aplikasi CRUD android menggunakan database SQLite dengan R
 
 ## Screenshoot
 
-  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/Home.png" width="250"/>
+  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/Home.png" width="250" hspace="10"/>
       
-  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/AddData.png" width="250"/> 
+  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/AddData.png" width="250" hspace="10"/> 
   
-  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/ExportData.png" width="250"/>
+  <img align="left" img src="https://github.com/madeinsap/KinerjaReport/blob/master/screenshoot/ExportData.png" width="250" hspace="10"/>
